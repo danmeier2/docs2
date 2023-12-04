@@ -1,0 +1,63 @@
+---
+title: "Docker Compose"
+---
+
+## Run Docker-Compose
+
+The best way to run VectorFlow is via docker compose. If you are running this on Mac, please grant Docker permissions to read from your Documents folder as instructed here. If this fails, remove the volume section from the `docker-compose.yml`.
+
+### Set Environment Variables
+
+First create a folder, env_scripts, in the root for all the environment variables, then create env_vars.env in the env_scripts folder to add all the environment variables mentioned below. You only need to set the LOCAL_VECTOR_DB variable if you are running qdrant, Milvus or Weaviate locally.
+
+```
+INTERNAL_API_KEY=your-choice
+POSTGRES_USERNAME=postgres
+POSTGRES_PASSWORD=your-choice
+POSTGRES_DB=vectorflow
+POSTGRES_HOST=postgres
+RABBITMQ_USERNAME=guest
+RABBITMQ_PASSWORD=guest
+RABBITMQ_HOST=rabbitmq
+EMBEDDING_QUEUE=embeddings
+VDB_UPLOAD_QUEUE=vdb-upload
+LOCAL_VECTOR_DB=qdrant | milvus | weaviate
+API_STORAGE_DIRECTORY=/tmp
+MINIO_ACCESS_KEY=minio99
+MINIO_SECRET_KEY=minio123
+MINIO_ENDPOINT=minio:9000
+MINIO_BUCKET=vectorflow
+```
+
+You can choose a variable for INTERNAL_API_KEY, POSTGRES_PASSWORD, and POSTGRES_DB, but they must be set.
+
+### Run Docker-Compose
+
+Make sure you pull Rabbit MQ, Postgres, Min.io into your local docker repo. We also recommend running a vector DB in locally, so make sure to pull the image of the one you are using. Our docker-compose file will spin up qdrant by default and create two index/collections. If you plan to run Milvus or Weaviate, you will have to configure them on your own.
+
+```
+docker pull rabbitmq
+docker pull postgres
+docker pull qdrant/qdrant | docker pull milvusdb/milvus | docker pull semitechnologies/weaviate
+docker pull minio/minio
+```
+
+Then run:
+
+```
+docker-compose build --no-cache
+docker-compose up -d
+```
+
+Note that the init containers are running a script that sets up the database schema, vector DB and Min.io object store. These containers stop after the script completes.
+
+### (optional) Configure Sentence Transformer open face models.
+
+VectorFlow can run any Sentence Transformer model but the docker-compose file will not spin it up automatically. Either run app.py --model_name your-sentence-transformer-model, or build and run the docker image in src/hugging_face with:
+
+```
+docker build --file hugging_face/Dockerfile -t vectorflow_hf:latest .
+docker run --network=vectorflow --name=vectorflow_hf -d --env-file=/path/to/.env vectorflow_hf:latest --model_name "your_model_name_here"
+```
+
+Note that the Sentence Transformer models can be large and take several minutes to download from Hugging Face. VectorFlow does not provision hardware, so you must ensure your hardware has enough RAM/VRAM for the model. By default, VectorFlow will run models on GPU with CUDA if available.

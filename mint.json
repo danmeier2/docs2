@@ -1,21 +1,17 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Starter Kit",
+  "name": "VectorFlow",
   "logo": {
-    "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg"
+    "dark": "/logo/logo-cube.svg",
+    "light": "/logo/logo-cube.svg"
   },
   "favicon": "/favicon.png",
   "colors": {
-    "primary": "#9563FF",
-    "light": "#AE87FF",
-    "dark": "#0D001D",
+    "primary": "#a855f7",
+    "light": "#a855f7",
+    "dark": "#a855f7",
     "background": {
-      "dark": "#090014"
-    },
-    "anchors": {
-      "from": "#FF7F57",
-      "to": "#9563FF"
+      "dark": "#0F172A"
     }
   },
   "topbarLinks": [
@@ -30,35 +26,58 @@
   },
   "tabs": [
     {
+      "name": "Examples",
+      "url": "examples"
+    },
+    {
+      "name": "Architecture",
+      "url": "architecture"
+    },
+    {
       "name": "API Reference",
       "url": "api-reference"
     }
   ],
   "anchors": [
     {
-      "name": "Documentation",
-      "icon": "book-open-cover",
-      "url": "https://mintlify.com/docs"
+      "name": "Cloud Version",
+      "icon": "cloud",
+      "url": "https://app.getvectorflow.com/"
     },
     {
       "name": "Community",
-      "icon": "slack",
-      "url": "https://mintlify.com/community"
-    },
-    {
-      "name": "Blog",
-      "icon": "newspaper",
-      "url": "https://mintlify.com/blog"
+      "icon": "discord",
+      "url": "https://discord.gg/MEXuahMs2F"
     }
   ],
   "navigation": [
     {
       "group": "Get Started",
-      "pages": ["introduction", "quickstart", "development"]
+      "pages": ["introduction", "quickstart", "docker-compose", "Kubernetes"]
     },
     {
-      "group": "Essentials",
-      "pages": ["essentials/markdown", "essentials/code", "essentials/images", "essentials/settings", "essentials/navigation"]
+      "group": "Python Library",
+      "pages": ["python-library/introduction","python-library/embed-single-file", "python-library/embed-multiple-files"]
+    },
+    {
+      "group": "API Overview",
+      "pages": ["api-overview/overview"]
+    },
+    {
+      "group": "Pipeline Components",
+      "pages": ["pipeline/data-sources", "pipeline/chunking", "pipeline/metadata", "pipeline/embedding-models", "pipeline/vector-databases"]
+    },
+    {
+      "group": "Multi-Modal Embeddings",
+      "pages": ["multi-modal/image-embeddings"]
+    },
+    {
+      "group": "Examples",
+      "pages": ["examples/overview", "examples/arize-phoenix-example"]
+    },
+    {
+      "group": "Architecture",
+      "pages": ["architecture/introduction"]
     },
     {
       "group": "API Documentation",
@@ -67,16 +86,21 @@
     {
       "group": "Endpoint Examples",
       "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/update",
-        "api-reference/endpoint/delete"
+        "api-reference/endpoint/embed",
+        "api-reference/endpoint/job-status"
       ]
     }
   ],
   "footerSocials": {
-    "twitter": "https://twitter.com/mintlify",
     "github": "https://github.com/mintlify",
     "linkedin": "https://www.linkedin.com/company/mintsearch"
+  },
+  "analytics": {
+    "posthog": {
+        "apiKey": "phc_TXdpocbYTeZVm5VJmMzHTMrCofBQu3e0kN7HGMNGTVW"
+    }
+  },
+  "api": {
+    "baseUrl": "https://vectorflowembeddings.online"
   }
 }

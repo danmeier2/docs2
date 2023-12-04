@@ -1,0 +1,35 @@
+---
+title: "Job Status"
+api: "GET https://vectorflowembeddings.online/jobs/<JobID>/status"
+description: "This endpoint embeds a file."
+---
+
+### Body
+
+<ParamField header="Authorization" type="string" default="Dan" required>
+  This is a JSON object for properties assigned to this user group. These will
+  be accessible through variables in the dashboards and SQL editor
+</ParamField>
+<ParamField header="X-VectorDB-Key" type="string" required>
+  This is a JSON object for properties assigned to this user group. These will
+  be accessible through variables in the dashboards and SQL editor
+</ParamField>
+<ParamField header="X-EmbeddingAPI-Key" type="string" required>
+  This is a JSON object for properties assigned to this user group. These will
+  be accessible through variables in the dashboards and SQL editor
+</ParamField>
+
+<ParamField path="JobID" type="number" required>
+  This is a JSON object for properties assigned to this user group. These will
+  be accessible through variables in the dashboards and SQL editor
+</ParamField>
+
+### Response
+
+<ResponseField name="message" type="string">
+  Successfully added {batch_count} batches to the queue
+</ResponseField>
+
+<ResponseField name="JobID" type="number">
+
+</ResponseField>

@@ -1,0 +1,19 @@
+---
+title: "Kubernetes"
+description: ""
+icon: "code"
+---
+
+# Start
+
+1. Install Docker, minikube (https://lnkd.in/gTaGXczr) and run: minikube start
+2. Clone, Setup VectorFlow and run: chmod +x kube/scripts/deploy-local-k8s.sh and ./kube/scripts/deploy-local-k8s.sh
+3. Verify Deployments: kubectl get deployments -n vectorflow
+4. Create a Tunnel: Establish a connection to the Kubernetes cluster with: minikube tunnel
+
+## Benefits
+
+Smooth Transition: Moving from a local Kubernetes cluster to a production environment is streamlined, ensuring a smooth transition from prototyping to production for your RAG application.
+Easy data syncing and maintenance: Kubernetes makes it easy to run jobs on a schedule like syncing your upstream data with your vector DB and removing stale data.
+Auto-Scaling and Recovery: These features are essential for managing fluctuating workloads.
+Simplified Maintenance: Using microservices architecture on Kubernetes facilitates easier maintenance and scalability.

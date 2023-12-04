@@ -1,0 +1,32 @@
+---
+title: "Chunking"
+---
+
+## Chunking Schema & Custom Chunking
+
+VectorFlow's built in chunkers count by token not by character. A chunk in vectorflow is a dictionary that has the following keys:
+
+```
+text: str
+vector: list[float]
+```
+
+You may run a custom chunker by adding a file, custom_chunker.py, with a method, chunker(source_data: list[str]) to the src/worker directory prior to build the docker image for the worker. This chunker must return a list of chunk dictionaries that conform to the standard above.
+
+You can add any keys you want to the chunk dictionary as long as its JSON serializable, meaning no custom classes or function, datetimes types or circular code references. You can use this custom chunk to then upload metadata to the vector DB with whatever schema you desire.
+
+### Chunk Validation Webhook
+
+If you wish to validate which chunks you wish to embed, pass a ChunkValidationURL parameter in the body of the /embed request. This will send the request with the following json payload, `{"chunks": chunked_data}`, where chunked_data is a list of chunk dictionaries. It will expected back json containing key valid_chunks with a list of valid chunks for embedding. This endpoint will timeout after 30 seconds by default but can be configured in the application code.
+
+### Raw Embeddings Webhook
+
+If you wish to use VectorFlow only for chunking and generating embeddings, pass a WebhookURL parameter in the body of the `/embed` request and a `X-Webhook-Key` as a header. VectorFlow assumes a webhook key is required for writing back to any endpoint. The embeddings are sent back along with the source chunks in the chunk dictionary outlined above. This is sent as json with the following form:
+
+```
+{
+    'Embeddings': list[dict],
+    'DocumentID': str,
+    'JobID': int
+}
+```

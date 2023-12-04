@@ -1,0 +1,103 @@
+---
+title: "Making requests"
+---
+
+To use VectorFlow for development, make an HTTP request to your API's URL - for example, localhost:8000 from your development machine, or vectorflow_api:8000 from within another docker container.
+
+## Request & Response Payload
+
+### Embed a Single File
+
+To submit a single file for embedding, make a POST request to the /embed endpoint with a file attached, the 'Content-Type: multipart/form-data' header and the following payload:
+
+```
+{
+    'SourceData=path_to_txt_file'
+    'LinesPerBatch=4096'
+    'EmbeddingsMetadata={
+        "embeddings_type": "OPEN_AI | HUGGING_FACE | IMAGE",
+        "chunk_size": 512,
+        "chunk_overlap": 128,
+        "chunk_strategy": "EXACT | PARAGRAPH | SENTENCE | CUSTOM",
+        "hugging_face_model_name": "sentence-transformer-model-name-here"
+    }'
+    'VectorDBMetadata={
+        "vector_db_type": "PINECONE | QDRANT | WEAVIATE | MILVUS | REDIS | LANCEDB | MONGODB",
+        "index_name": "index_name",
+        "environment": "env_name"
+    }'
+    'DocumentID=your-optional-internal-tracking-id'
+}
+```
+
+This will create a `job` and you will get the following payload back:
+
+```
+{
+    message': f"Successfully added {batch_count} batches to the queue",
+    'JobID': job_id
+}
+```
+
+Right now this endpoint only supports uploading single files at a time, up to 25 MB due to timeout issues. Note that it may be deprecated.
+
+### Embed Multiple Files At Once
+
+To submit multiple files for embedding, make a POST request to the /jobs endpoint. The payload is the same as for single file embedding except the way you attach multiple files is different:
+
+```
+{
+    'files=[
+        ('file',  ('test_pdf.pdf', open(file1_path, 'rb'), 'application/octet-stream')),
+        ('file', ('test_medium_text.txt', open(file2_path, 'rb'), 'application/octet-stream'))
+    ]'
+}
+```
+
+NOTE: You must stream the files to the endpoint, not send it as a conventional post request or it will fail.
+
+This endpoint will create one job per file uploaded. You will get the following JSON payload back:
+
+```
+{
+    'successful_uploads': successfully_uploaded_files,
+    'failed_uploads': failed_uploads,
+    'empty_files_count': empty_files_count,
+    'duplicate_files_count': duplicate_files_count
+}
+```
+
+Where successfully_uploaded_files is a list of tuples containing (file name, job id) and failed_uploads is a list of file names that failed to upload so you can retry them.
+
+## Get Job Status
+
+### Get a Single Job Status
+
+To check the status of a job, make a GET request to this endpoint: `/jobs/<int:job_id>/status`. The response will be in the form:
+
+
+```
+{
+    'JobStatus': job_status
+}
+```
+
+### Get Multiple Job Statuses
+
+To check the status of multiples job, make a POST request to this endpoint: /jobs/status. The request body will be in the form:
+
+```
+{
+    'JobIDs': job_ids
+}
+```
+
+and the response will be in the form
+
+```
+{
+    'Jobs': [{'JobID': job_id, 'JobStatus': job_status}, ...]
+}
+```
+
+There is an example in testing_clients/get_jobs_by_ids.py.

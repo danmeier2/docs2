@@ -1,0 +1,46 @@
+---
+title: "Arize Phoenix Example"
+description: ""
+---
+
+This tutorial will show you how to embed a large volume of data, upload it to a vector database, run top K similarity searches against it, and monitor it in production using VectorFlow, Arize Phoenix, Weaviate and LlamaIndex. All of these tools are open source. You can follow along and run the code in this Google Colab.
+
+```
+mkdir vectorflow-arize-tutorial
+cd vectorflow-arize-tutorial
+
+wget http://ai.stanford.edu/~amaas/data/sentiment/aclImdb_v1.tar.gz
+tar -xzf aclImdb_v1.tar.gz
+```
+
+```
+pip install -q "arize-phoenix[experimental]" gcsfs llama-index weaviate-client vectorflow-client openai
+```
+
+````
+# For using Weaviate Cloud Service
+import weaviate
+import json
+import os
+
+weaviate_url = "https://your-endpoit"
+os.environ['WEAVIATE_URL'] = weaviate_url
+
+weaviate_key = "your-key-goes-here"
+os.environ['WEAVIATE_KEY'] =  weaviate_key
+
+client = weaviate.Client(
+    url = os.getenv("WEAVIATE_URL"),
+    auth_client_secret=weaviate.AuthApiKey(api_key=os.getenv("WEAVIATE_KEY")),
+)
+
+class_obj = {
+    "class": "Vectorflow",
+    "vectorizer": "none", # we will use VectorFlow for this since its more performant
+}
+
+client.schema.create_class(class_obj)
+
+response = client.schema.get("Vectorflow")
+```
+
